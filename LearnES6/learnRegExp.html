@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6中正则</title>
+</head>
+<body>
+<p>
+    u修饰符，表示Unicode，可处理大于0xFFFF的字符。只有在使用u修饰符的情况下，Unicode表达式当中的大括号才会被正确解读，否则会被解读为量词。
+    正则代码的\S是预定义模式，匹配所有不是空格的字符。只有加了u修饰符，它才能正确匹配码点大于0xFFFF的Unicode字符。
+    加u还可以匹配字形相同但编码不一样的字符。
+</p>
+<p>
+    y（sticky黏连）修饰符，与g修饰符相同的是它也是全局匹配，后一次匹配从前一次匹配成功位置之后匹配，不同是，g只要后边有匹配即可。y需要从剩余的第一个位置匹配。
+</p>
+<script type="text/javascript">
+    let reg1=new RegExp('abc', 'i');
+    let reg2=new RegExp(/abc/ig); //ES6中构造允许使用正则表达式
+    let reg3=new RegExp(/abc/ig, 'i').flags;//参数中标志覆盖正则表达式里的标志
+//    String.prototype.match(), replace(), search(), split() 都调用RegExp的同名方法，RegExp.prototype[Symbol.match]等
+    reg1.lastIndex=2;//指定匹配开始位置，搭配g或y向后匹配
+    //属性还有source（匹配的正则式），flags（标志位）
+</script>
+</body>
+</html>

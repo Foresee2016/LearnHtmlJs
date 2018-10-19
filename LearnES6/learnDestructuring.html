@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>变量解构赋值</title>
+</head>
+<body>
+就跟Python似的，简化了语法写法。
+<p>解构用处很多，如变量交换值，[x,y]=[y,x]，函数返回多个值，直接解构赋值，不用数组。函数参数使用解构，可以用对象解构，对应命名参数，无需严格顺序，赋函数参数默认值</p>
+<p>还可以用于JSON提取值</p>
+<p>遍历Map：let map=new Map(); for(let [key, val] of map) ... 只要key时for(let [key] of map)... 只要值for(let [, val] of map)</p>
+<p>加载模块时提取方法。const {obj1, obj2}=require('module')</p>
+<script type="text/javascript">
+    //ES5中赋值
+    var a = 1;
+    var b = 2;
+    //ES6中数组简化赋值
+    var [x, y, z] = [1, 2, 3];
+
+    //只要模式匹配就能赋值
+    let [, , k] = ['qwe', 3, 'zxc'];
+    let [val1, [val2, val3]] = [1, [2, '3']];
+    let [head, ...tail] = [1, 2, 3, 4]; //head是1，tail是[2,3,4]
+    let [v1, v2, v3, v4, ...v5] = ['a']; //v1是'a'，v2到v4是undefined，v5是[]空数组
+    //因为解构不成功时，不能解构的部分赋undefined
+
+    //不完全解构时，也能成功一部分
+    let [va1, [va2], va3] = [1, [2, 3], 4];//va1=1,va2=2,va3=4
+    //右边不是可迭代对象时，报错
+    //    let [value1, value2]='a';
+    //左边可以使用var，let，const，右边是可迭代对象，除了Array，Set也可以，如果一个函数实现了Iterator，yield结果，也可以。
+    //左边的变量可以赋默认值，当右边解出的值严格等于undefined时，将赋默认值
+    let [t1, t2 = 2] = [1, undefined];
+    let [r1, r2 = r1] = [1]; //后面的可以用前面已赋值的作默认值
+    //如果默认值是表达式或者函数，它是惰性求值的，即用到时求值
+
+    //还可以用于对象
+    let {foo, bar}={foo:'abc', bar: 'asd'};//对象取值按名称对应，而不是次序。它是对象赋值的简写
+    var {foo: baz}={foo: 'qwer', other:'uio'}; //baz得'qwer'而foo未定义，所以解构时是同名属性赋值
+    //所以下面两种写法都会报错
+    //let foo3;
+    //let {foo3}={foo3:1};//foo3已声明了
+    //et foo4;
+    //let {foo5:foo4}={foo5:2};//foo5的解构结果赋给foo4，和上面已声明的冲突
+    //var命令允许重复声明，所以如果用var，不会有重复定义错误，但let和const不行
+    //嵌套对象也可以解构
+    var obj={
+        p:['Hello', {y: 'world'}]
+    }
+    var {p:[x4, {y4}]}=obj; //对象属性名提供模式，不会给p赋值
+    //对象解构可以指定给对象的某个属性赋值，也可以指定默认值。右边对应项严格等于undefined时取默认值
+    var {foo6}={bar:'bar'};//foo没有右边的可以对应，foo得undefined
+    var {foo7:{bar7}}={baz:'baz'}; //报错，右边没有foo7，foo7是undefined，再取foo7的bar7属性时报错
+
+    //将已定义的变量用于解构时，不能直接在行首写大括号，被认为是代码块
+    let x8;
+    //{x8}={x8:1}//错误
+    ({x8}={x8:1}) //正确，没有将大括号写在行首，在小括号里可以解构
+
+    //可以用于方法初始化
+    let {sin, cos, tan}=Math; //直接提取Math的方法赋值给变量
+
+    //字符串可以直接解构
+    let [s1,s2,s3,s4,s5]='hello';
+    let {length:len}='hello';//字符串有length属性，这里取出来赋给len变量
+    //在有方法时，可调用方法，如果右边不是对象，会作转换
+    let {toString: str}=123;//数值或bool值转换对象，调用toString。undefined和null不能转换为对象，所以右边值为这俩时不能转换。
+    //模式中的圆括号，导致歧义时，解构失败。
+</script>
+<script type="text/javascript">
+    //函数参数也可以使用解构赋值
+    function add([a,b]) {
+        return a+b;
+    }
+    add([1,2]);
+
+    [[1,2],[3,4]].map(([a,b])=>a+b);//得到[3,7]
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6中字符串扩展</title>
+</head>
+<body>
+<p>Unicode表示法，采用\uxxxx的方式表示一个字符，跟Java一样。一个字节取值范围是\u0000 - \uFFFF之间，双字节的要使用\uxxxx\uxxxx表示。
+    如果\u后跟的超过4位，如\u20BB7，那么JS认为是\u20BB+7，\u20BB为不能打印的字符，显示为空格，最后解析为" 7"。<br>
+    ES6扩展，\u后用大括号廓上值即可，\u{41}\u{42}\u{43}解析为ABC，变量中也可以用，let hello=123; hell\u{6F}=456;<br>
+    双字节的可以写一起，超过4位，自动解析成两个。'\u{1F680}'=='\uD83D\uDE80'为true</p>
+<p>
+    传统上JS只有indexOf方法，ES6提供了includes(), startsWith(), endsWith()。<br>
+    repeat()方法返回重复了n次字符串的结果，传入小数时被取整，传入NaN和0时返回空字符串，传入字符串尝试转数值。
+    x.padStart(), padEnd()使用给定字符串补充x直到x的长度足够指定长度
+</p>
+<p>
+    String.raw()提供原生字符串，其中所有反斜杠都被转义，如果已被转义（两个反斜杠）不会再转义。
+</p>
+<script type="text/javascript">
+    console.log('\z' === 'z', '\172' === 'z', '\x7A' === 'z', '\u007A' === 'z', '\u{7A}' === 'z');//都为true
+    //JS内部默认用UTF-16存储，一个字符占2字节，对于四字节的不能正确存储，即最大0xFFFF，ES6提供codePointAt()能正确处理4字节字符。
+    let str = '𠮷'; //十六进制\x20BB7
+    console.log('ES5之前的方法按2字节字符', str, str.length, str.charAt(0), str.charAt(1), str.charCodeAt(0), str.charCodeAt(1));
+    let str2 = '𠮷a';
+    console.log('ES6的codePointAt()能处理4字节字符，返回一个字符码点', str, str.length, str2.codePointAt(0), str2.codePointAt(1), str2.codePointAt(2));
+    console.log('codePointAt()返回的十进制可用toString转16进制', str2.codePointAt(0).toString(16));
+    //总之，codePointAt()方法会正确返回32位的UTF­16字符的码点。对于那些两个字节储存的常规字符，它的返回结果与charCodeAt()方法相同。
+    /*上面代码中，字符a在字符串str2的正确位置序号应该是1，但是必须向codePointAt方法传入2。解决这个问题的一个办法是使用for ... of循环，因为它会正确识别32位的UTF­16字符。*/
+    for (let ch of str2) {
+        console.log(ch.codePointAt(0).toString(16));
+    }
+    //测试一个字符串是2字节的还是4字节的可用codePointAt()
+    function is32BitChar(ch) {
+        return ch.codePointAt(0) > 0xFFFF;
+    }
+    //ES5中字符串的fromCharCode()不能解析4字节的码点，当传入值大于0xFFFF时，高2字节溢出被丢弃，0x20BB7中2被丢弃解析为0x0BB7
+    //ES6中字符串的fromCodePoint()方法能解析4字节码点
+    let str3 = String.fromCodePoint(0x20BB7);//定义在String类上，不是字符串实例
+    console.log(String.fromCharCode(0x78, 0x1F680, 0x79) === 'x\uD83D\uDE80y');//多参数会一并返回
+    //for ... of循环可以识别大于0xFFFF的字符，传统fori循环不行
+    for (let ch of 'foo' + str3) {
+        console.log(ch);
+    }
+    //ES5的charAt()方法不能识别4字节字符串，ES7提供at()方法，可以识别到
+    //console.log(str3.at(0)); //暂时不能广泛支持
+    //带重音字符的语言，重音有两种表示法，一是直接使用的字符就是该字符，二是普通字符后跟重音字符，合成一个带重音的字符。ES5将两种表示法视为不同的，
+    // ES6提供normalize()方法转成一致的，合成或分解。对3个及以上字符合成不支持
+</script>
+<script type="text/javascript">
+    //字符串模板，使用反引号标识，是增强版的字符串，其中用${}渲染变量，避免了字符串加号。字符串可换行。可以写表达式，可以调用函数
+    let name = 'user1';
+    let content = `This is <b>${name}</b>`;
+    console.log(`line 1.
+    line 2.
+    not need \\n`);//空格和缩进被计入字符串中
+    let x = 1, y = 2;
+    console.log(`${x} + ${y} * 2 = ${x + y * 2}`);
+
+    //引用模板字符串本身
+    let str4='return '+'`Hello ${name}`';
+    let func=new Function('name', str4);
+    console.log(func('name1'));
+    //另一种写法
+    let str5='(name) => `Hello ${name}`';
+    let func2=eval.call(null, str5);
+    console.log(func2('name2'));
+    //标签模板，反引号字符串紧跟在函数名称后面，将使用该函数处理字符串
+
+</script>
+</body>
+</html>

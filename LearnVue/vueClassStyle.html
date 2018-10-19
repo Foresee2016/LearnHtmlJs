@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue 教程</title>
+    <style>
+        .active{
+            color: greenyellow;
+        }
+        .error-class{
+            font-size: x-large;
+        }
+        .text-i{
+            font-style:italic;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div v-bind:class="{ active: isActive }">示例</div>
+    <div class="another" v-bind:class="{ active: isActive, 'text-i': hasError}">可以与已有class共存</div>
+    注意text-font这样的名称必须加引号，因为JSON里用横线也需要括起来
+    <div v-bind:class="{ another: isActive, 'text-i': hasError}">两个都渲染上</div>
+    <div v-bind:class="classObject">绑定的类在模型里定义</div>
+    <div v-bind:class="[activeClass, errorClass]">数组传给v-bind:class以应用class列表</div>
+    <div v-bind:class="[isActive ? activeClass : '', errorClass]">用三元表达式</div>
+    <div v-bind:class="[{active: isActive}, errorClass]">可以用对象语法</div>
+    <my-componnet class="baz boo">最终会有四个class，template定义的和这里加入的</my-componnet>
+    <my-component v-bind:class="{active: isActive}">可以用对象条件加入该类</my-component>
+</div>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+        Vue.component('my-component',{
+            template:'<p class="foo bar">Hello</p>'
+        });
+        var vm=new Vue({
+            el:'#app',
+            data:{
+                isActive:true,
+                hasError:true,
+                classObject:{
+                    active:true,
+                    'text-i':true
+                },
+                activeClass:'active',
+                errorClass:'terror-class'
+            }
+        })
+    </script>
+</body>

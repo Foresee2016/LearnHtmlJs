@@ -1,0 +1,88 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>标题</title>
+</head>
+<body>
+<ol>
+    <todo-item></todo-item>
+</ol>
+<div id="app-7">
+    <ol>
+        <!--
+          现在我们为每个 todo-item 提供 todo 对象
+          todo 对象是变量，即其内容可以是动态的。
+          我们也需要为每个组件提供一个“key”，稍后再
+          作详细解释。
+        -->
+        <todo-item
+                v-for="item in groceryList"
+                v-bind:todo="item"
+                v-bind:key="item.id">
+        </todo-item>
+    </ol>
+</div>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    // 定义名为 todo-item 的新组件
+    Vue.component('todo-item', {
+        props: ['todo'],
+        template: '<li>{{todo.text}}</li>'
+    });
+    var app7 = new Vue({  //创建Vue实例，嵌套的可复用的组件树
+        el: '#app-7',
+        data: {
+            /*
+            当一个 Vue 实例被创建时，它向 Vue 的响应式系统中加入了其 data 对象中能找到的所有的属性。
+            当这些属性的值发生改变时，视图将会产生“响应”，即匹配更新为新的值。
+            */
+            groceryList: [
+                {id: 0, text: '蔬菜'},
+                {id: 1, text: '奶酪'},
+                {id: 2, text: '随便其它什么人吃的东西'}
+            ]
+        }
+    });
+    var data = { a: 1 };
+    // 该对象被加入到一个 Vue 实例中
+    var vm = new Vue({
+        data: data
+    });
+
+    // 他们引用相同的对象！
+    console.log(vm.a === data.a );// => true
+
+    // 设置属性也会影响到原始数据
+    vm.a = 2;
+    console.log(data.a );// => 2
+
+    // ... 反之亦然
+    data.a = 3;
+    console.log(vm.a); // => 3
+    /*当这些数据改变时，视图会进行重渲染。值得注意的是只有当实例被创建时 data 中存在的属性是响应式的。也就是说如果你添加一个新的属性，像：*/
+    vm.b = 'hi'
+    /*那么对 b 的改动将不会触发任何视图的更新。如果你知道你会在晚些时候需要一个属性，但是一开始它为空或不存在，那么你仅需要设置一些初始值。比如：*/
+    /*data: {
+        newTodoText: '',
+            visitCount: 0,
+            hideCompletedTodos: false,
+            todos: [],
+            error: null
+    }*/
+    /*除了 data 属性，Vue 实例暴露了一些有用的实例属性与方法。它们都有前缀 $，以便与用户定义的属性区分开来。例如：*/
+    data = { a: 1 };
+    vm = new Vue({
+        el: '#example',
+        data: data
+    });
+
+    console.log(vm.$data === data); // => true
+    console.log(vm.$el === document.getElementById('example')); // => true
+
+    // $watch 是一个实例方法
+    vm.$watch('a', function (newValue, oldValue) {
+        // 这个回调将在 `vm.a` 改变后调用
+    })
+</script>
+</body>
+</html>

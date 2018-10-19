@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generator是ES6的，配合yield使用</title>
+</head>
+<body>
+<p>
+    Generator 函数是协程在 ES6 的实现，最大特点就是可以交出函数的执行权（即暂停执行）。
+    一个Generator函数与普通function的区别就是函数名前面多了一个星号 * 但是执行时有很大不同，与yield命令配合，可以实现暂停执行的功能。
+</p>
+
+<p>
+    原来只有在调用了 next() 函数之后，函数才会开始执行，但是结果中没有看到打印的 xx 字样，所以应该是代码运行停在了 let a = yield x 这一行，所以 Object {value: 10, done: false}
+    就是yield的返回值，这个功能类似return 但是也有区别。
+
+    文档说，yield的返回是一个对象，包括 value 和 done 两部分，value自然是返回值，done是该generator函数是否执行完，这里看到false，就是表明该函数还有后续可以执行的部分。
+</p>
+<script type="text/javascript">
+    let go = function*(x) {//Generator函数有星号
+        console.log('x', x);
+        let a = yield x;
+        console.log('xx', x);
+
+        console.log('a', a);
+
+        let b = yield x + 1;
+
+        let sum = a + b;
+
+        yield sum;
+
+        return sum;
+    };
+    let g = go(10);
+    let res=g.next();
+    console.log(res);
+    console.log(g.next(100));//因为yield x时返回a，所以给回去时传入一个值
+    console.log(g.next(50));//返回value为yield的sum值
+    console.log(g.next(2));//参数传入但没有接受位置，相当于没传。返回value为return的sum值
+    console.log(g.next(2));//已经迭代完成了，value会是undefined，无法再返回，done依然是true
+</script>
+</body>
+</html>

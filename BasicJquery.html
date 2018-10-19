@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery基础操作</title>
+    <script src="./Lib/jquery/dist/jquery.js"></script>
+</head>
+<body>
+<div id="list">
+    <input type="checkbox" name="classId1" title="classId1">
+    <input type="checkbox" name="classId2" title="classId2">
+    <input type="checkbox" name="classId3" title="classId3">
+</div>
+
+<script>
+    function checkAll() {
+        $("#list").find('input[type="checkbox"]').each(function (index, item) {
+            $(this).prop('checked', true);
+        });
+    }
+    function toggleCheck() {
+        $("#list").find('input[type="checkbox"]').each(function (index, item) {
+            if (item.checked) {
+                $(this).prop('checked', false);
+            } else {
+                $(this).prop('checked', true);
+            }
+        });
+    }
+</script>
+</body>
+</html>

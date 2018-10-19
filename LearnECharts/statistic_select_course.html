@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>选课统计数据</title>
+</head>
+<body>
+<div id="main" style="height: 400px; width: 600px;"></div>
+<script src="../Lib/echarts/echarts.min.js"></script>
+<script src="../Lib/echarts/macarons.js"></script>
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('main'), 'macarons');
+    var option = {
+        title : {
+            text: '课程高考人数和学考人数',
+            subtext: '纯属虚构'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['高考人数','学考人数']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                data : ['物理','化学','生物','地理','历史','政治']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'高考人数',
+                type:'bar',
+                data:[100, 20, 50, 80, 60, 70],
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                }
+            },
+            {
+                name:'学考人数',
+                type:'bar',
+                data:[20, 100, 70, 60, 30, 50],
+                markPoint : {
+                    data : [
+                        {name : '年最高', value : 182.2, xAxis: 7, yAxis: 183, symbolSize:18},
+                        {name : '年最低', value : 2.3, xAxis: 11, yAxis: 3}
+                    ]
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+</script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6 let和const</title>
+</head>
+<body>
+<script type="text/javascript">
+    //变量挂载问题，使用var定义的全局变量，在浏览器中会挂载在全局对象window中，（在NodeJS中全局对象时global），在模块环境中这一条不适用，
+    //要定义在全局对象下，必须显示调用全局对象。
+    var a=123;
+    console.log(window.a);//a是全局对象的属性
+    let b=456;
+    console.log(window.b);//undefined，let和const声明的不是全局对象的属性
+</script>
+<script type="text/javascript">
+    //const和let的作用域一致，定义变量不能改变，必须在定义时赋值
+    const PI=3.14;
+    console.log(PI);
+    const obj={};
+    obj.abc='abc';//可以改变其中的属性
+    //obj={};//不能再指向新的对象
+
+    const noChange=Object.freeze({});
+    noChange.abc='abc'; //不起作用，对象被冻结
+    console.log(noChange);
+
+    const noChange2=Object.freeze({abc:'abc',def:{qwe:'qwe'}});
+    noChange2.def.qwe='zxc'; //改变其内部属性的属性是可以的，如果要冻结所有，递归冻结
+    console.log(noChange2);
+    var constantize=(obj)=>{
+        Object.freeze(obj);
+        Object.keys(obj).forEach((key, value)=>{
+            if(typeof obj[key]==='object'){
+                Object.freeze(obj[key]);
+            }
+        })
+    }
+</script>
+<script type="text/javascript">
+    //ES5只有全局作用域和函数作用域，没有块级作用域，ES6增加块作用域。
+    let num = 2;
+    {
+        let num = 10;
+        console.log(num);
+    }
+    console.log(num);
+
+    for (let i = 0; i < 3; i++) { //循环变量不会残留在全局里
+        console.log(i);
+    }
+    console.log(i);//不能访问到
+    for (var i = 0; i < 3; i++) {
+        console.log(i);
+    }
+    console.log(i);//局部变量i会泄漏到全局里
+    var funcArr = [];
+    for (let i = 0; i < 5; i++) {
+        funcArr[i] = function () {
+            console.log(i);
+        }
+    }
+    funcArr[3]();//输出3，因为i是局部有效的
+    var funcArr2 = [];
+    for (var i = 0; i < 5; i++) {
+        funcArr2[i] = function () {
+            console.log(i);
+        }
+    }
+    funcArr2[3]();//输出5，因为i是共用的
+
+    //    console.log(notExist);//声明变量之前就使用它，会导致异常，而不是undefined
+    //    typeof notExist;//typeof 也不是绝对安全的，在声明前使用的话，异常ReferenceError
+</script>
+<script type="text/javascript">
+    var now=new Date();
+    function test() {
+        console.log(now);//这里会输出undefined
+        if(false){
+            var now='abc';//ES5在函数作用域内还会有变量提升，会提升在log前声明，在这里赋值
+        }
+    }
+    test();
+
+    let now2=new Date();
+    function test2() {
+        console.log(now2);
+        if(false){
+            let now2='abc';//局部作用域，不影响外部
+        }
+    }
+    test2();
+    function test3() {
+        let temp=123;
+        if(true){
+            let temp='abc';//局部作用域不影响函数作用域内
+        }
+        console.log(temp);
+    }
+</script>
+<script type="text/javascript">
+    //立即执行匿名函数IIFE，ES5使用，让函数作用域不干扰全局
+    (function () {
+       var val=1234;
+       console.log(val);
+    }());
+    //块作用域即可不干扰全局
+    {
+        let val=1234;
+        console.log(val);
+    }
+    function foo4() {
+        console.log('outside');
+    }
+    (function () {
+       if(false){
+           function foo4() {
+               console.log('inside');
+           }
+       }
+       foo4();
+    }());
+</script>
+<script type="text/javascript">
+    //let不像var那样，会发生“变量提升”现象。所以，变量一定要在声明后使用
+    //变量提升示例：下面打印later之后声明later，解释器会把later变量声明提升到log前，变成var later; console.log(later); later='...';
+    console.log(later);//输出undefined
+    var later='declare later';
+
+    //函数提升，命名函数会提升，而var func=function(...)的会以变量提升的方式。
+    //下面会把foo函数声明提升到执行之前。
+    foo();
+    function foo() {
+        console.log('foo');
+    }
+    bar();//报错，因为以变量提升方式，var bar; bar(); bar=function(...);执行bar时发现bar不是函数。
+    var bar=function () {
+        console.log('bar');
+    }
+</script>
+<script type="text/javascript">
+    var tmp=123;
+    if(true){
+        /*如果区块中存在let和const命令，这个区块对这些命令声明的变量，从一开始就形成了封闭作用域。凡是在声明之前就使用这些命令，就会报错。
+        * 在语法上，称为“暂时性死区”（temporal dead zone，简称TDZ）。*/
+        tmp='abc';//ReferenceError
+        let tmp; //后声明同名变量，也会在块一开始就影响这个块。
+    }
+</script>
+</body>
+</html>

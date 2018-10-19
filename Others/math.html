@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简单数学</title>
+</head>
+<body>
+<div>
+    <input type="text" placeholder="输入被加数" id="value1"/>
+    <input type="text" placeholder="输入加数" id="value2"/>
+    <button id="calc" onclick="calcSum()">计算</button>
+</div>
+<p>
+    <span>和：</span><span id="result">加和显示</span>
+</p>
+<script type="text/javascript">
+    function sumUp(i, j) {
+        return i + j;
+    }
+    function calcSum() {
+        var value1Str = document.getElementById('value1').value;
+        var value2Str = document.getElementById('value2').value;
+        console.log('value1Str = ' + value1Str + ', value2Str = ' + value2Str);
+        var value1 = Number(value1Str);
+        var value2 = Number(value2Str);
+        if (isNaN(value1) || isNaN(value2)) {
+            alert('输入必须是数值');
+        }
+        document.getElementById('result').innerHTML = sumUp(value1, value2);
+    }
+</script>
+</body>
+</html>
