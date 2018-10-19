@@ -5,6 +5,35 @@
     <title>ES6对数值的扩展</title>
 </head>
 <body>
+<p>
+    Math.cbrt()用于计算一个数的立方根。JavaScript的整数使用32位二进制形式表示，Math.clz32()返回一个数的32位无符号整数形式有多少个前导0。<br>
+    Math.imul()用于32位整数乘法，能计算大于2的53次方的数返回正确结果。Math.fround方法返回一个数的单精度浮点数形式。<br>
+    Math.hypot()方法返回所有参数的平方和的平方根。<br>
+    ES7增加了指数云算法 let a = 2 ** 3;
+</p>
+<p>
+    ES6新增了4个对数相关方法。Math.expm1()返回Math.exp(x) - 1, Math.log1p()返回log(1+x)，Math.log10()返回以10为底的x的对数。如果x小于0，则返回NaN。
+    Math.log2()返回以2为底的x的对数。如果x小于0，则返回NaN。ES6增加了6个三角函数。
+</p>
+<script type="text/javascript">
+    let a = 0b11001100, b = 0o10; //二进制用0b开头，八进制用0o开头（不再用0开头）
+    //要转换带前缀的字符串为数值，用Number转换
+    let str = '0b1100', str2 = '0o15';
+    let num = Number(str), num2 = Number(str2);
+    console.log(num, num2);
+    console.log(Number.isFinite(15), Number.isFinite(Infinity), Number.isFinite(true), Number.isNaN(16));//检查不为无穷，或NaN。先转换数值再判断，非数值一律false
+    console.log(Number.parseInt('123'), Number.parseFloat('1.123'));//ES6将ES5的函数移到Number上
+    console.log(Number.isInteger(25), Number.isInteger(25.0), Number.isInteger(25.1));//浮点数和整数都一样存储，所以25.0返回true
+    console.log(Number.EPSILON);//一个极小的常量，为浮点计算设置一个误差范围，计算结果小于这个误差范围，视为计算正确
+    console.log(0.1 + 0.2 - 0.3, (0.1 + 0.2 - 0.3) < Number.EPSILON, (0.1 + 0.2) === 0.3);
+    //JS能准确表示的证书范围2^-53到2^53不包括端点，超过不能准确表示，Number.isSafeInteger()检查
+    //    Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER //最大最小常量，超过的数值也能存储，但不准确
+</script>
+<script type="text/javascript">
+    //Math对象
+    console.log(Math.trunc(1.234), Math.trunc('123.456'));//Math.trunc()去小数部分，返回整数部分
+    console.log(Math.sign(-1.23), Math.sign(123)); //取符号
 
+</script>
 </body>
 </html>
