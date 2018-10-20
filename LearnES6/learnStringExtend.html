@@ -20,7 +20,7 @@
 <script type="text/javascript">
     console.log('\z' === 'z', '\172' === 'z', '\x7A' === 'z', '\u007A' === 'z', '\u{7A}' === 'z');//都为true
     //JS内部默认用UTF-16存储，一个字符占2字节，对于四字节的不能正确存储，即最大0xFFFF，ES6提供codePointAt()能正确处理4字节字符。
-    let str = '𠮷'; //十六进制\x20BB7
+    let str = '𠮷'; //十六进制\x20BB7，十进制134071
     console.log('ES5之前的方法按2字节字符', str, str.length, str.charAt(0), str.charAt(1), str.charCodeAt(0), str.charCodeAt(1));
     let str2 = '𠮷a';
     console.log('ES6的codePointAt()能处理4字节字符，返回一个字符码点', str, str.length, str2.codePointAt(0), str2.codePointAt(1), str2.codePointAt(2));

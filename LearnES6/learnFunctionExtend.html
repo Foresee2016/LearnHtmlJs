@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6 函数扩展</title>
+</head>
+<body>
+<p>
+    ES6之前不支持函数默认值，只能在函数内x = x | default;变通的方式。ES6支持默认值，跟Java一样。
+    可以搭配解构赋值默认值。
+</p>
+<p>
+    ES6引入rest参数，function(...values)，用以简化arguments参数（之前用它接收可变长度参数）。
+    扩展运算符...，它相当于rest的逆操作，把数组里参数解开，用逗号分隔。之前可以用函数的apply方法将数组展开赋值给参数，现在可替代它了。
+    类数组对象比如nodeList可转为数组。其内部调用的是Iterator，所以Set，Map和Generator函数这类实现了的都可以。
+</p>
+<p>
+    函数的name属性为函数名称。
+    箭头函数跟Java里lambda表达式一样，如果返回对象，可加圆括号，而直接大括号会被认为是函数体。lambda里可以用解构，参数写在括号里。
+    箭头函数有几个使用注意点。
+    （1）函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象。
+    （2）不可以当作构造函数，也就是说，不可以使用new命令，否则会抛出一个错误。
+    （3）不可以使用arguments对象，该对象在函数体内不存在。如果要用，可以用Rest参数代替。
+    （4）不可以使用yield命令，因此箭头函数不能用作Generator函数。
+    关于this：箭头函数没有自己的this，所以它的this一直就是外层定义位置的this，也因为没有this，所以没有构造函数。
+    也因为没有this，arguments，super，new.target这三个变量都没有。
+</p>
+<p>
+    函数绑定，ES7中使用双冒号::将左边的对象作为上下文环境即this绑定到右边的函数上。
+</p>
+<p>
+    尾调用优化。尾调用因为不需要保留调用栈的信息，即使用下一个调用帧替代当前调用帧即可，不需要在它上面新建调用帧。节约内存。
+    尾递归不会造成栈溢出，也是因为仅需保留最后一步的调用信息，空间占用为O(1)。
+</p>
+<script type="text/javascript">
+    //搭配解构时，如果结合函数参数的默认值，就可以省略第二个参数。这时，就出现了双重默认值。
+    function fetch(url, {method='GET'}={}) {
+        console.log(method);
+    }
+    fetch('http://...');
+    //函数的length属性返回未指定默认参数的参数的数量，rest参数也不计入length。
+    //默认参数的作用域
+    let x=1;
+    function add(x, y=x){ //函数内部x屏蔽全局，y的默认值是函数内部的x
+        console.log(x,y);
+    }
+    add(3);
+    //如果函数A的参数默认值是函数B，由于函数的作用域是其声明时所在的作用域，那么函数B的作用域不是函数A，而是全局作用域。
+    let foo='out';
+    function fun1(func = ()=>foo){ //这相当于在函数fun1之前定义了命名函数，然后传到fun1默认值的位置。
+        let foo='inner';
+        console.log(foo, func());
+    }
+    fun1();
+    console.log(1, ...[2,3,4], 5);//数组解成2,3,4
+    //函数调用时方便
+    function push(...vals) {
+        let arr=[];
+        arr.push(...vals);
+    }
+    let args=[1,2];
+    let res2=add(...args);
+    let args2=[0, ...args, 3,4];//用于合并数组，替代数组的concat函数
+    let [a, ...rest]=[1,2,3,4,5];//与结构赋值搭配
+    console.log(a,rest);
+    //扩展运算符可以解字符串，且能够识别32位的Unicode字符
+    let h=[...'hello'];
+    console.log(h);
+//    let str='x\uD83D\uDE80y';
+    let str='x\u{20bb7}y';
+    let rev1=str.split('').reverse().join('');
+    let rev2=[...str].reverse().join('');
+    console.log(str, rev1, rev2);
+</script>
+</body>
+</html>
