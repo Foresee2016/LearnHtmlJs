@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6 Symbol</title>
+</head>
+<body>
+<p>
+    ES5对象的属性名都是字符串，加属性时容易冲突，Symbol从根本上解决了这个问题。Symbol是ES6引入的新数据类型，表示独一无二的值。当前JS有7种数据类型。
+    Undefined、Null、布尔值（Boolean）、字符串（String）、数值（Number）、对象（Object）、Symbol。<br>
+    现在对象的键可以有两种类型，原来的字符串类型，和Symbol类型。<br>
+    Symbol时原始类型，不能以new创建。创建时传入description，在toString时用于区分。它不能直接参与字符串加，可以显示转换。<br>
+    属性名遍历时，Symbol键不会被遍历到，但它也不是私有属性。Object.getOwnPropertySymbols()可以取到Symbol属性。<br>
+    ES6内部定义了11个Symbol，用以指向语言内部使用的方法。
+</p>
+<script type="text/javascript">
+    let s=Symbol();
+    console.log(typeof s);
+    let sym=Symbol('mySym');
+    let obj={};
+    obj[sym]='abc';
+    let obj2={
+        [sym]:'abc'
+    };
+    let obj3={};
+    Object.defineProperty(obj3, sym, {value:'abc'});
+    //直接创建的Symbol时唯一的，两变量不等，Symbol.for()可寻找是否已有该description创建的Symbol，有则返回，没有则返回新的。for方法会登记记录，而直接创建不登记。
+    let s1=Symbol('bar'), s2=Symbol('bar');
+    let s3=Symbol.for('foo'), s4=Symbol.for('foo');
+    console.log(s1===s2, s3===s4);
+    //Symbol.keyFor()方法返回一个已登记的Symbol类型值的key。
+    let s5=Symbol.keyFor(s1);//undefined
+    let s6=Symbol.keyFor(s3);
+    console.log(s5, s6);
+    //登记时是在全局登记的，iFrame和service worker中可以取到
+</script>
+</body>
+</html>
