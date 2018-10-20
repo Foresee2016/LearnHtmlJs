@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6 Decorator</title>
+</head>
+<body>
+<p>
+    修饰器（Decorator）是一个表达式，用来修改类的行为。这是ES7的一个提案，目前Babel转码器已经支持。
+    修饰器对类的行为的改变，是代码编译时发生的，而不是在运行时。这意味着，修饰器能在编译阶段运行代
+    码。
+    类中的方法也可以修饰，但是不能用于修饰函数，因为函数存在提升。
+    core­decorators.js是一个第三方模块，提供了几个常见的修饰器，通过它可以更好地理解修饰器。
+    我们可以使用修饰器，使得对象的方法被调用时，自动发出一个事件。
+    在修饰器的基础上，可以实现MixIn模式。所谓MixIn模式，就是对象继承的一种替代方案，中文译为“混
+    入”（mix in），意为在一个对象之中混入另外一个对象的方法。
+    Trait也是一种修饰器，效果与Mixin类似，但是提供更多功能，比如防止同名方法的冲突、排除混入某些方
+    法、为混入的方法起别名等等。traits-decorator第三方模块。
+</p>
+<script type="text/javascript">
+    function testable(target) {
+        target.testable=true;
+    }
+    @testable //现在会报错
+    class A{
+        constructor(x){
+            this.x=x;
+        }
+    }
+    let obj=new A('name');
+    console.log(obj.testable);
+
+    //再封装一层函数，接收参数
+    function isTestable(isTest) {
+        function testable(target) {
+            target.testable=isTest;
+        }
+    }
+    @isTestable(true)
+    class A{
+        constructor(x){
+            this.x=x;
+        }
+    }
+</script>
+</body>
+</html>
