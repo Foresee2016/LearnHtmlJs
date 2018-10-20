@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6 对象扩展</title>
+</head>
+<body>
+<p>
+    Object.is()比较对象是否严格相等，基本等用于===，两处不同：+0不等于-0，NaN等于自身。<br>
+    Object.assign()方法用来将源对象（source）的所有可枚举属性，复制到目标对象（target）。它至少需要两个对象作为参数，第一个参数是目标对象，后面的参数都是源对象。
+    不可枚举的属性和继承的属性不会被复制。传入数组会被认为是对象。复制时是浅拷贝，且嵌套的对象不能追加值，会覆盖。<br>
+    引入Enumerable的目的是在迭代时忽略掉一些继承的属性，比如length，toString()等。<br>
+    对象属性遍历有6中方法，根据Enumerable和Symbol的需求可选用不同的。遍历次序都遵循同样的规则。
+</p>
+<p>
+    对象的扩展运算符...<br>
+    ES7的提案，Babel已支持转码。
+    let {a,b,...c}={x:1, y:2, z:3, r:4}
+</p>
+<script type="text/javascript">
+    //直接写入变量和函数
+    let foo = 'bar';
+    let obj1 = {foo, name: 'jack'};//等同于{foo:foo, name:'jack'}
+    console.log(obj1);//{foo:'bar'}
+    let o = {
+        method(){
+            return 'hello';
+        }
+    };
+    //等同于
+    let o2 = {
+        method: function () {
+            return 'hello';
+        }
+    };
+    function func1(x, y) {
+        return {x, y}; //相当于return {x:x, y:y}
+    }
+    //CommonJS里导出的地方，很合适使用，module.exports={func1, func2, func3};
+    //Generator函数在开头加星号
+    let o3 = {
+        *method(){
+            yield 1;
+        }
+    };
+    //ES5中要使用表达式作为属性名，需要中括号，而不能直接在对象名里写，ES6可以使用中括号中写表达式，赋进变量名。
+    let obj2 = {foo: 'name'};
+    let keyName='a'+'b'+'c';
+    obj2['a' + 'b'] = 'hello';
+    let obj3 = {foo: 'name', ['a' + 'b']: 'hello', [keyName]:'val'};
+    //表达式定义方法名
+    let obj4={
+        ['func'+keyName](){
+            return 'val';
+        }
+    }
+</script>
+</body>
+</html>
