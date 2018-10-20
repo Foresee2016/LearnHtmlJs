@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6 Async</title>
+</head>
+<body>
+<p>
+    异步的解决方案：回调，Promise，Generator，Thunk，ES7的async（跟C#的async函数和await一样用，是Generator和自动执行器结合的语法糖），Babel转码器已支持。ES6 await是保留字<br>
+    注意并发和继发执行。希望并发执行最好用Promise.all，forEach()的function使用async也会并发执行但不合适。for...of会继发执行。
+</p>
+<script type="text/javascript">
+    //Generator函数，优点是除了yield，跟正常同步执行时，代码顺序没变，需要异步的地方，使用yield交给其它线程执行。缺点是流程管理不方便（何时执行第一阶段，何时执行第二阶段）。
+    function* async1() {
+        let file = yield readFile('filepath');
+        console.log(file);
+    }
+    function readFile(filepath) {
+        console.log(filepath);
+    }
+    let g = async1();
+    let result = g.next();
+    result.value.then(function (data) {
+        return data.json();
+    }).then(function (data) {
+        g.next(data);
+    });
+</script>
+<script>
+    //编译器怎么写比较好。一个争论的焦点是"求值策略"，即函数的参数到底应该何时求值。
+    //一种意见是"传值调用"（call by value），即在进入函数体之前，就计算x+5的值（等于6），再将这个值传入函数f 。C语言就采用这种策略。
+    //另一种意见是"传名调用"（call by name），即直接将表达式x+5传入函数体，只在用到它的时候求值。Hskell语言采用这种策略。
+    //Thunk函数的含义
+    //编译器的"传名调用"实现，往往是将参数放到一个临时函数之中，再将这个临时函数传入函数体。这个临时函
+    //数就叫做Thunk函数。
+    let thunk=function (x) {
+        return x+5;
+    };
+    function f(thunk) {
+        return thunk()*2;
+    }
+    //JavaScript语言的Thunk函数JavaScript语言是传值调用，它的Thunk函数含义有所不同。在JavaScript语言中，Thunk函数替换的不是表
+    // 达式，而是多参数函数，将其替换成单参数的版本，且只接受回调函数作为参数。
+    //正常版本readFile：fs.readFile(filepath, callback);
+    //Thunk单参数版本
+//    let readFileThunk=Thunk(filename);
+//    readFileThunk(callback);
+    //co模块可以作为Generator的执行器，它就是将异步回调，使用Thunk不断调用，都执行完返回Promise。
+</script>
+</body>
+</html>
