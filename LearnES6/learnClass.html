@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6 Class</title>
+</head>
+<body>
+<p>
+    ES6提供了更接近传统语言的类和对象写法，更像Java了。
+    其中星号方法是Generator方法。static修饰静态方法。
+    但没有类内定义的静态属性，ES6规定class中定义的属性和static修饰的属性都无效。可以从类外定义属性在类名下。
+    Mixin模式指的是，将多个类的接口“混入”（mix in）另一个类。
+
+
+
+</p>
+<script>
+    //ES5时
+    function Point(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    Point.prototype.toString = function () {
+        return '(' + this.x + ',' + this.y + ')';
+    };
+    //ES6时，class，其实是语法糖
+    class Point2{
+        constructor(x,y){
+            this.x=x;
+            this.y=y;
+        }//不要逗号
+        toString(){//不要function关键字
+            return '(' + this.x + ',' + this.y + ')';
+        }
+    }
+    //类可以看做构造函数的另一种写法
+    console.log(typeof Point2, Point2===Point2.prototype.constructor);
+    //表达式命名
+    const MyClass=class Me{//这样命名，类名称是MyClass，Me只在内部能用，指代当前类。
+        getClassName(){
+            return Me.name;
+        }
+    }
+    //Class不存在变量提升，这与函数不一样
+</script>
+<script type="text/javascript">
+    //继承，extends，同样用super访问父类，必须调用super才能获取到this对象（由父类继承下来的this，然后对其再加工）
+    //被继承的类可以是任意带有prototype的，所以类和函数也可以继承。
+    //ES5原生构造函数不能被继承，比如不能自己定义Array的子类，因为子类获取不到父类原生构造函数的内部属性。ES6可以。
+    class MyArray extends Array{
+        constructor(...args){
+            super(...args);
+        }
+    }
+</script>
+<script>
+    //getter和setter，与ES5一样，可以用get和set函数拦截属性的存取操作。这个行为定义在descriptor上
+</script>
+<script>
+    //静态属性在ES6里无效，ES7有提案，Babel已支持。
+    class Test1{
+        //prop1:1 //无效
+        //static prop2:2 //无效
+        static staticFunc(){
+            return 'static function';
+        }
+    }
+    Test1.prop3=3;//定义静态属性
+    console.log(Test1.prop3, Test1.staticFunc());
+
+    //new.target属性，内部可以访问，父类中访问它时，返回的是子类
+
+</script>
+</body>
+</html>
