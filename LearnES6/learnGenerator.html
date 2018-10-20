@@ -8,6 +8,7 @@
 <p>
     Generator 函数是协程在 ES6 的实现，最大特点就是可以交出函数的执行权（即暂停执行）。
     一个Generator函数与普通function的区别就是函数名前面多了一个星号 * 但是执行时有很大不同，与yield命令配合，可以实现暂停执行的功能。
+
 </p>
 
 <p>
@@ -15,6 +16,48 @@
     就是yield的返回值，这个功能类似return 但是也有区别。
 
     文档说，yield的返回是一个对象，包括 value 和 done 两部分，value自然是返回值，done是该generator函数是否执行完，这里看到false，就是表明该函数还有后续可以执行的部分。
+</p>
+<p>
+    Generator函数是ES6提供的一种异步编程解决方案，语法行为与传统函数完全不同。本章详细介绍
+    Generator函数的语法和API，它的异步编程应用请看《异步操作》一章。
+    Generator函数有多种理解角度。从语法上，首先可以把它理解成，Generator函数是一个状态机，封装了多
+    个内部状态。
+    执行Generator函数会返回一个遍历器对象，也就是说，Generator函数除了状态机，还是一个遍历器对象生
+    成函数。返回的遍历器对象，可以依次遍历Generator函数内部的每一个状态。
+    形式上，Generator函数是一个普通函数，但是有两个特征。一是，function命令与函数名之间有一个星号；
+    二是，函数体内部使用yield语句，定义不同的内部状态（yield语句在英语里的意思就是“产出”）。
+    换言之，Generator函数是分段执行的，yield语句是暂停执行的标记，而next方法可以恢复执行。
+</p>
+<p>
+    Generator函数返回的对象，都有一个throw方法，可以在外部调用，抛出的错误在Generator函数内部捕获，但一处catch不能捕获多次。
+    还有一个return方法，在外部调用，提前结束迭代。如果Generator函数内部有try...finally，则return在finally块之后执行。
+</p>
+<p>
+    嵌套，在一个Generator函数内部调用另一个Generator函数，默认没有效果，可以用yield*语句，它用来在内部调其它的。相当于yield语句串联在这里。
+    可以有复杂应用，比如嵌套迭代数组，二叉树等。
+</p>
+<p>
+    应用：
+    Generator与状态机
+    Generator是实现状态机的最佳结构。比如，下面的clock函数就是一个状态机。
+    Generator与协程
+    协程（coroutine）是一种程序运行的方式，可以理解成“协作的线程”或“协作的函数”。协程既可以用单线程实
+    现，也可以用多线程实现。前者是一种特殊的子例程，后者是一种特殊的线程。
+    （1）异步操作的同步化表达
+    Generator函数的暂停执行的效果，意味着可以把异步操作写在yield语句里面，等到调用next方法时再往后执
+    行。这实际上等同于不需要写回调函数了，因为异步操作的后续操作可以放在yield语句下面，反正要等到调用
+    next方法时再执行。所以，Generator函数的一个重要实际意义就是用来处理异步操作，改写回调函数。
+    Ajax是典型的异步操作，通过Generator函数部署Ajax操作，可以用同步的方式表达。let result = yield request(url);
+    （2）控制流管理
+    如果有一个多步操作非常耗时，采用回调函数，可能会写成多层嵌套，或用Promise，而Generator函数可以多个yield实现，实际中可以让yield语句返回Promise对象。
+    多个任务按顺序一个接一个执行时，yield语句可以按顺序排列。多个任务需要并列执行时（比如只有A任务和
+    B任务都执行完，才能执行C任务），可以采用数组的写法。
+    function* method(){
+        let [text1, text2]=yield [task1(), task2()];
+        console.log(text1, text2);
+    }
+    （3）部署iterator接口
+    利用Generator函数，可以在任意对象上部署iterator接口。
 </p>
 <script type="text/javascript">
     let go = function*(x) {//Generator函数有星号
